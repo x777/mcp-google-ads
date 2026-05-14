@@ -33,6 +33,14 @@ A tool that connects [Google Ads](https://ads.google.com/) with Claude AI, allow
    - Identify opportunities for optimization
    - Get recommendations for budget allocation
 
+5. **Campaign Creation & Management** *(fork additions)*
+   - Create budgets, Search campaigns, ad groups, keywords, and Responsive Search Ads end-to-end
+   - Pause, enable, or remove campaigns and ad groups
+   - Manage geo and language targeting
+   - Add or remove campaign-level negative keywords
+   - Change bidding strategy on the fly
+   - Attach callout and sitelink extensions to campaigns
+
 ---
 
 ## Google Ads MCP Architecture Flow
@@ -105,6 +113,31 @@ Here's what you can ask Claude to do once you've set up this integration:
 | `get_campaign_performance`      | Shows campaign metrics with performance data                | Your account ID and time period                                 |
 | `get_ad_performance`            | Detailed analysis of your ad creative performance           | Your account ID and time period                                 |
 | `run_gaql`                      | Runs any arbitrary GAQL query with formatting options       | Your account ID, query, and format (table, JSON, or CSV)        |
+
+### Campaign Management Tools (Fork Additions)
+
+These tools are added by this fork on top of upstream `cohnen/mcp-google-ads`. They let Claude create and manage Search campaigns end-to-end, not just read data.
+
+| **Tool**                              | **What It Does**                                                                                              |
+|---------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| `create_campaign_budget`              | Create a campaign budget. Returns the budget resource name for use in `create_search_campaign`.               |
+| `create_search_campaign`              | Create a Search campaign (PAUSED by default for safety review before activation).                             |
+| `create_ad_group`                     | Create an ad group inside a Search campaign.                                                                  |
+| `create_keywords`                     | Add keywords to an ad group.                                                                                  |
+| `create_responsive_search_ad`         | Create a Responsive Search Ad (RSA) — the standard Google Search ad format.                                   |
+| `update_campaign_status`              | Pause, enable, or remove a campaign.                                                                          |
+| `update_ad_group_status`              | Pause, enable, or remove a single ad group.                                                                   |
+| `add_campaign_geo_targets`            | Add geographic location targets to a campaign.                                                                |
+| `remove_campaign_geo_targets`         | Remove geographic location targets from a campaign.                                                           |
+| `add_campaign_language_targets`       | Add language targets to a campaign.                                                                           |
+| `add_negative_keywords`               | Add campaign-level negative keywords to block ads from showing on specific searches.                          |
+| `remove_campaign_negative_keywords`   | Detach campaign-level negative keywords by their exact text.                                                  |
+| `set_bidding_strategy`                | Change a campaign's bidding strategy.                                                                         |
+| `add_campaign_callout_assets`         | Create callout assets and attach them to a campaign.                                                          |
+| `remove_campaign_callout_assets`      | Detach callout assets from a campaign by their exact text.                                                    |
+| `add_campaign_sitelink_assets`        | Create sitelink assets and attach them to a campaign.                                                         |
+
+> **Safety note:** `create_search_campaign` and `create_ad_group` create resources in PAUSED state by default so you can review the configuration before activation. Use `update_campaign_status` / `update_ad_group_status` to enable them.
 
 ### Using the Advanced Query Tools
 
